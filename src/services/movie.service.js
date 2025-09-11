@@ -9,4 +9,27 @@ function getAllMovies(callback) {
   });
 }
 
-module.exports = { getAllMovies };
+  function getMovieById(id, callback) {
+  movieDAO.getMovieById(id, callback);
+}
+
+function showEditMovie(req, res, next) {
+  // render edit form
+  res.render('movies/edit', {
+    title: 'Edit Movie',
+    movieId: req.params.id
+  });
+}
+
+function updateMovie(req, res, next) {
+  // hier logica om de film te updaten
+  res.redirect('/movies/' + req.params.id);
+}
+
+
+module.exports = {
+  getAllMovies,
+  getMovieById,
+  showEditMovie,
+  updateMovie,
+};

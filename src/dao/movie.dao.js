@@ -28,8 +28,20 @@ function createMovie(movie, callback) {
   );
 }
 
+function updateMovie(id, movie, callback) {
+  db.query(
+    'UPDATE movies SET title = ?, year = ? WHERE id = ?',
+    [movie.title, movie.year, id],
+    function (err, result) {
+      if (err) return callback(err);
+      callback(null, result);
+    }
+  );
+}
+
 module.exports = {
   getAllMovies,
   getMovieById,
-  createMovie
+  createMovie,
+  updateMovie
 };

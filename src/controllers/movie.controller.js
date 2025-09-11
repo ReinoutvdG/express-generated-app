@@ -13,4 +13,20 @@ movieService.getAllMovies(function (err, movies) {
 });
 }
 
-module.exports = { getAllMovies };
+function getMovieById(req, res, next) {
+  movieService.getMovieById(req.params.id, function (err, movie) {
+    if (err) return next(err);
+    if (!movie) return res.status(404).send('Movie not found');
+    res.render('movies/detail', {
+      title: movie.title,
+      movie: movie
+    });
+  });
+}
+
+
+
+module.exports = { 
+  getAllMovies,
+  getMovieById,
+};
