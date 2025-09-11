@@ -28,6 +28,7 @@ function createMovie(movie, callback) {
   );
 }
 
+// film updaten
 function updateMovie(id, movie, callback) {
   db.query(
     'UPDATE movies SET title = ?, year = ? WHERE id = ?',
@@ -39,9 +40,20 @@ function updateMovie(id, movie, callback) {
   );
 }
 
+// film verwijderen
+function deleteMovie(id, callback) {
+  db.query('DELETE FROM film WHERE id = ?', [id], function (err, result) {
+    if (err) return callback(err);
+    // result.affectedRows > 0 betekent dat er echt iets verwijderd is
+    callback(null, result.affectedRows > 0);
+  });
+}
+
+
 module.exports = {
   getAllMovies,
   getMovieById,
   createMovie,
-  updateMovie
+  updateMovie,
+  deleteMovie,
 };
