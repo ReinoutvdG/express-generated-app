@@ -1,4 +1,5 @@
 const db = require('../util/db');
+const logger = require('../util/logger');
 
 // alle films
 function getAllMovies(callback) {
@@ -10,8 +11,15 @@ function getAllMovies(callback) {
 
 // film op id
 function getMovieById(id, callback) {
-  db.query('SELECT * FROM film WHERE id = ?', [id], function (err, results) {
-    if (err) return callback(err);
+  logger.debug(`DAO: running query getMovieById with id=${id}`);
+
+  db.query('SELECT * FROM film WHERE film_id = ?', [id], function (err, results) {
+    if (err) {
+      logger.error(`DAO error: ${err.message}`);
+      return callback(err);
+    }
+
+    logger.debug(`DAO result for id=${id}: ${JSON.stringify(results)}`);
     callback(null, results[0]);
   });
 }

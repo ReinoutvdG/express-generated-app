@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const movieService = require('../services/movie.service');
+const logger = require('../util/logger');
 
 
 // READ - alle films
@@ -17,9 +18,21 @@ movieService.getAllMovies(function (err, movies) {
 
 // READ - één film
 function getMovieById(req, res, next) {
+  logger.debug(`Controller: getMovieById called with id=${req.params.id}`);
+
   movieService.getMovieById(req.params.id, function (err, movie) {
-    if (err) return next(err);
-    if (!movie) return res.status(404).send('Movie not found');
+    if (err) {
+      logger.error(`Error in service.getMovieById: ${err.message}`);
+      return next(err);
+    }
+
+    if (!movie) {
+      logger.warn(`No movie found with id=${req.params.id}`);
+      return res.status(404).send('Movie not found');
+    }
+
+    logger.info(`Movie found: ${movie.title} (id=${movie.film_id})`);
+
     res.render('movies/detail', {
       title: movie.title,
       movie: movie

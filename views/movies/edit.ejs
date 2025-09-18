@@ -1,0 +1,21 @@
+<h1>Edit Movie</h1>
+
+<form action="/movies/<%= movie.id %>/edit" method="POST">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" id="title" name="title" value="<%= movie.title %>" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="year" class="form-label">Year</label>
+    <input type="number" class="form-control" id="year" name="year" value="<%= movie.year %>" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Save Changes</button>
+</form>
+
+<form action="/movies/<%= movie.id %>/delete" method="POST" style="margin-top:10px;">
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+
+<a href="/movies/<%= movie.id %>" class="btn btn-secondary mt-3">Cancel</a>

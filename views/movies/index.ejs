@@ -1,4 +1,4 @@
-<h1 class="mb-4"><%= title %></h1>
+<h1 class="mb-4"><title><%= typeof title !== 'undefined' ? title : 'My App' %></title></h1>
 
 <div class="row">
   <% movies.forEach(function(movie) { %>
@@ -8,7 +8,7 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title"><%= movie.title %></h5>
           <p class="card-text">Year: <%= movie.year %></p>
-          <a href="/movies/<%= movie.id %>" class="btn btn-primary mt-auto">Details</a>
+          <a href="/movies/<%= movie.film_id %>" class="btn btn-primary mt-auto">Details</a>
         </div>
       </div>
     </div>

@@ -4,9 +4,12 @@ const movieController = require("../controllers/movie.controller")
 
 /* GET home page. */
 router.get("/", movieController.getAllMovies);
+//router.get("/create", movieController.showCreateMovie);
+router.post("/create", movieController.createMovie);
 router.get("/:id", movieController.getMovieById);
-router.post("/", movieController.createMovie);
-router.put("/:id", movieController.updateMovie);
-router.delete("/:id", movieController.deleteMovie);
+//router.get("/:id/edit", movieController.showEditMovie);
+router.post("/:id/edit", movieController.updateMovie);
+router.post("/:id/delete", movieController.deleteMovie);
+
 
 module.exports = router;

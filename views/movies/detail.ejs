@@ -1,0 +1,11 @@
+<h1><%= title %></h1>
+<p>ID: <%= movie.film_id %></p>
+
+<a href="/movies/<%= movie.film_id %>/edit" class="btn btn-warning">Edit</a>
+
+<form action="/movies/<%= movie.film_id %>/delete" method="POST" style="display:inline;">
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+
+
+<a href="/movies" class="btn btn-secondary">Back to list</a>
