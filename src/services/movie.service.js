@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const movieDAO = require('../dao/movie.dao');
+const logger = require('../util/logger');
+
 
 // READ - alle films
 function getAllMovies(callback) {

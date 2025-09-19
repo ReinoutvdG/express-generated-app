@@ -3,7 +3,7 @@ const logger = require('../util/logger');
 
 // alle films
 function getAllMovies(callback) {
-  db.query('SELECT * FROM film', function (err, results) {
+  db.query('SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating FROM film', function (err, results) {
     if (err) return callback(err);
     callback(null, results);
   });
@@ -27,10 +27,25 @@ function getMovieById(id, callback) {
 // film toevoegen
 function createMovie(movie, callback) {
   db.query(
-    'INSERT INTO film (title, year) VALUES (?, ?)',
-    [movie.title, movie.year],
+    `INSERT INTO film 
+      (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      movie.title,
+      movie.description,
+      movie.release_year,
+      movie.language_id,
+      movie.rental_duration,
+      movie.rental_rate,
+      movie.length,
+      movie.replacement_cost,
+      movie.rating
+    ],
     function (err, result) {
-      if (err) return callback(err);
+      if (err) {
+        logger.error(`DAO createMovie error: ${err.message}`);
+        return callback(err);
+      }
       callback(null, result.insertId);
     }
   );
@@ -38,25 +53,58 @@ function createMovie(movie, callback) {
 
 // film updaten
 function updateMovie(id, movie, callback) {
-  db.query(
-    'UPDATE movies SET title = ?, year = ? WHERE id = ?',
-    [movie.title, movie.year, id],
-    function (err, result) {
-      if (err) return callback(err);
-      callback(null, result);
-    }
-  );
-}
+  logger.debug(`DAO: updateMovie query with id=${id}, data=${JSON.stringify(movie)}`);
 
-// film verwijderen
-function deleteMovie(id, callback) {
-  db.query('DELETE FROM film WHERE id = ?', [id], function (err, result) {
-    if (err) return callback(err);
-    // result.affectedRows > 0 betekent dat er echt iets verwijderd is
-    callback(null, result.affectedRows > 0);
+  const sql = `
+    UPDATE film 
+    SET title = ?, 
+        description = ?, 
+        release_year = ?, 
+        language_id = ?, 
+        rental_duration = ?, 
+        rental_rate = ?, 
+        length = ?, 
+        replacement_cost = ?, 
+        rating = ?, 
+        special_features = ?
+    WHERE film_id = ?
+  `;
+
+  const params = [
+    movie.title,
+    movie.description,
+    movie.release_year,
+    movie.language_id,
+    movie.rental_duration,
+    movie.rental_rate,
+    movie.length,
+    movie.replacement_cost,
+    movie.rating,
+    movie.special_features, // hier toevoegen ✅
+    id
+  ];
+
+  db.query(sql, params, function (err, result) {
+    if (err) {
+      logger.error(`DAO updateMovie error: ${err.message}`);
+      return callback(err);
+    }
+    logger.debug(`DAO: updateMovie result=${JSON.stringify(result)}`);
+    callback(null, result);
   });
 }
 
+
+// film verwijderen
+function deleteMovie(id, callback) {
+  db.query('DELETE FROM film WHERE film_id = ?', [id], function (err, result) {
+    if (err) {
+      logger.error(`DAO deleteMovie error: ${err.message}`);
+      return callback(err);
+    }
+    callback(null, result.affectedRows > 0);
+  });
+}
 
 module.exports = {
   getAllMovies,

@@ -18,8 +18,6 @@ movieService.getAllMovies(function (err, movies) {
 
 // READ - één film
 function getMovieById(req, res, next) {
-  logger.debug(`Controller: getMovieById called with id=${req.params.id}`);
-
   movieService.getMovieById(req.params.id, function (err, movie) {
     if (err) {
       logger.error(`Error in service.getMovieById: ${err.message}`);
@@ -44,19 +42,39 @@ function getMovieById(req, res, next) {
 function createMovie(req, res, next) {
   movieService.createMovie(req.body, (err, newMovie) => {
     if (err) return next(err);
-    res.status(201).json(newMovie);
+    res.redirect(`/movies/${insertId}`);
   });
 }
 
 
 // UPDATE
 function updateMovie(req, res, next) {
-  movieService.updateMovie(req.params.id, req.body, (err, updatedMovie) => {
+  logger.debug(`req.body: ${JSON.stringify(req.body)}`);
+
+  const id = req.params.id;
+  const movieData = req.body;
+
+  // haal de features op (ondersteun zowel 'special_features' als 'special_features[]')
+  let sf = req.body['special_features'] || req.body['special_features[]'];
+
+  if (Array.isArray(sf)) {
+    movieData.special_features = sf.map(s => s.trim()).join(',');
+  } else if (typeof sf === 'string' && sf.length) {
+    movieData.special_features = sf.trim();
+  } else {
+    movieData.special_features = '';
+  }
+
+  logger.debug(
+    `Controller updateMovie id=${id}, special_features=${movieData.special_features}`
+  );
+
+  movieService.updateMovie(id, movieData, function (err, success) {
     if (err) return next(err);
-    if (!updatedMovie) return res.status(404).json({ message: "Movie not found" });
-    res.json(updatedMovie);
+    res.redirect(`/movies/${id}`);
   });
 }
+
 
 
 // DELETE
@@ -68,6 +86,17 @@ function deleteMovie(req, res, next) {
   });
 }
 
+function showCreateMovie(req, res) {
+  res.render('movies/form', { movie: null });
+}
+
+function showEditMovie(req, res, next) {
+  movieService.getMovieById(req.params.id, function (err, movie) {
+    if (err) return next(err);
+    if (!movie) return res.status(404).send('Movie not found');
+    res.render('movies/form', { movie });
+  });
+}
 
 module.exports = {  
   getAllMovies,
@@ -75,4 +104,6 @@ module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
+  showCreateMovie,
+  showEditMovie
 };
