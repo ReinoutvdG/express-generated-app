@@ -1,32 +1,46 @@
 const authDao = require("../dao/auth.dao");
-const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+
+function hashPassword(password) {
+  // SHA-1 base64 geeft ±28 tekens
+  return crypto.createHash('sha1').update(password).digest('base64');
+}
 
 async function authenticate(username, password) {
   const staff = await authDao.findByUsername(username);
   if (!staff) return null;
 
-  const match = await bcrypt.compare(password, staff.password);
-  if (!match) return null;
+  // hash het binnenkomende wachtwoord en vergelijk
+  const candidateHash = hashPassword(password);
 
+  // gebruik timingSafeEqual om leaks te voorkomen
+  const match = crypto.timingSafeEqual(
+    Buffer.from(candidateHash),
+    Buffer.from(staff.password)
+  );
+
+  if (!match) return null;
   return staff;
 }
 
-
 function registerStaff(staff, callback) {
-  // Hash het wachtwoord voordat het in de DB gaat
-  bcrypt.hash(staff.password, 10, (err, hash) => {
-    if (err) return callback(err);
+  try {
+    const hash = hashPassword(staff.password);
 
     const staffWithHash = {
       ...staff,
-      password: hash
+      password: hash,
+      address_id: 1,
+      store_id: 1
     };
 
     authDao.createStaff(staffWithHash, callback);
-  });
+  } catch (err) {
+    callback(err);
+  }
 }
 
-module.exports = { 
-    authenticate,
-    registerStaff
+module.exports = {
+  authenticate,
+  registerStaff
 };

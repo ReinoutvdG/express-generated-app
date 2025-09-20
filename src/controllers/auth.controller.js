@@ -8,8 +8,30 @@ function showLogin(req, res) {
 function login(req, res) {
   const { username, password } = req.body;
   logger.debug(`Login attempt: ${username}`);
-  // TODO: checken met auth.service of DAO
-  res.send("Login handler (nog niet af)");
+
+  // authService.authenticate retourneert een Promise
+  authService.authenticate(username, password)
+    .then(staff => {
+      if (!staff) {
+        // verkeerde credentials
+        return res.render("auth/login", { error: "Invalid username or password" });
+      }
+
+      // credentials oké – staff in sessie zetten
+      req.session.staff = {
+        id: staff.staff_id,
+        username: staff.username,
+        first_name: staff.first_name,
+        last_name: staff.last_name
+      };
+
+      logger.debug(`Staff ${staff.username} logged in`);
+      res.redirect("/"); // of een andere pagina
+    })
+    .catch(err => {
+      logger.error("Login error: " + err.message);
+      res.render("auth/login", { error: "Login failed" });
+    });
 }
 
 function logout(req, res) {
