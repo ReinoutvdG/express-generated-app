@@ -42,7 +42,7 @@ function getMovieById(req, res, next) {
 function createMovie(req, res, next) {
   movieService.createMovie(req.body, (err, newMovie) => {
     if (err) return next(err);
-    res.redirect(`/movies/${insertId}`);
+    res.redirect(`/movies/${newMovie.insertId}`); // redirect naar de nieuwe film
   });
 }
 
@@ -82,13 +82,18 @@ function deleteMovie(req, res, next) {
   movieService.deleteMovie(req.params.id, (err, success) => {
     if (err) return next(err);
     if (!success) return res.status(404).json({ message: "Movie not found" });
-    res.json({ message: "Movie deleted" });
+    res.redirect(`/movies`); // redirect naar de nieuwe film
   });
 }
 
-function showCreateMovie(req, res) {
-  res.render('movies/form', { movie: null });
+// GET create movie form
+function showCreateMovie(req, res, next) {
+  res.render('movies/form', { 
+    movie: null,
+    title: 'Create New Movie'
+  });
 }
+
 
 function showEditMovie(req, res, next) {
   movieService.getMovieById(req.params.id, function (err, movie) {

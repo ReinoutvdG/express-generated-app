@@ -26,30 +26,38 @@ function getMovieById(id, callback) {
 
 // film toevoegen
 function createMovie(movie, callback) {
-  db.query(
-    `INSERT INTO film 
-      (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      movie.title,
-      movie.description,
-      movie.release_year,
-      movie.language_id,
-      movie.rental_duration,
-      movie.rental_rate,
-      movie.length,
-      movie.replacement_cost,
-      movie.rating
-    ],
-    function (err, result) {
-      if (err) {
-        logger.error(`DAO createMovie error: ${err.message}`);
-        return callback(err);
-      }
-      callback(null, result.insertId);
+  const sql = `
+    INSERT INTO film 
+      (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating, special_features) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const params = [
+    movie.title,
+    movie.description,
+    movie.release_year,
+    movie.language_id,
+    movie.rental_duration,
+    movie.rental_rate,
+    movie.length,
+    movie.replacement_cost,
+    movie.rating,
+    movie.special_features
+  ];
+
+  logger.debug(`DAO: createMovie sql=${sql}`);
+  logger.debug(`DAO: createMovie params=${JSON.stringify(params)}`);
+
+  db.query(sql, params, function (err, result) {
+    if (err) {
+      logger.error(`DAO createMovie error: ${err.message}`);
+      return callback(err);
     }
-  );
+    logger.debug(`DAO: createMovie result=${JSON.stringify(result)}`);
+    callback(null, result);
+  });
 }
+
 
 // film updaten
 function updateMovie(id, movie, callback) {
