@@ -9,6 +9,7 @@ const expressLayouts = require("express-ejs-layouts");
 const indexRouter = require("./src/routes/index");
 const usersRouter = require("./src/routes/users");
 const movieRouter = require("./src/routes/movie.routes");
+const authRouter = require('./src/routes/auth.routes');
 const userDAO = require('./src/dao/movie.dao');
 
 const app = express();
@@ -28,6 +29,8 @@ app.use(expressLayouts);
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/movies", movieRouter)
+app.use("/", authRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
