@@ -11,7 +11,7 @@ movieService.getAllMovies(function (err, movies) {
 
   res.render('movies/index', {
     title: 'All Movies',
-    movies: movies.slice(0, 12) // eerste 12
+    movies: movies
   });
 });
 }
