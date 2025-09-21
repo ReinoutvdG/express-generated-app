@@ -92,7 +92,7 @@ function updateMovie(id, movie, callback) {
     movie.length,
     movie.replacement_cost,
     movie.rating,
-    movie.special_features, // hier toevoegen ✅
+    movie.special_features,
     id
   ];
 

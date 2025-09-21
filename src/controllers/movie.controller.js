@@ -42,7 +42,7 @@ function getMovieById(req, res, next) {
 function createMovie(req, res, next) {
   movieService.createMovie(req.body, (err, newMovie) => {
     if (err) return next(err);
-    res.redirect(`/movies/${newMovie.insertId}`); // redirect naar de nieuwe film
+    res.redirect(`/movies/${newMovie.insertId}`);
   });
 }
 
@@ -54,7 +54,6 @@ function updateMovie(req, res, next) {
   const id = req.params.id;
   const movieData = req.body;
 
-  // haal de features op (ondersteun zowel 'special_features' als 'special_features[]')
   let sf = req.body['special_features'] || req.body['special_features[]'];
 
   if (Array.isArray(sf)) {
@@ -82,7 +81,7 @@ function deleteMovie(req, res, next) {
   movieService.deleteMovie(req.params.id, (err, success) => {
     if (err) return next(err);
     if (!success) return res.status(404).json({ message: "Movie not found" });
-    res.redirect(`/movies`); // redirect naar de nieuwe film
+    res.redirect(`/movies`);
   });
 }
 

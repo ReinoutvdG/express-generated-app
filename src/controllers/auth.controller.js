@@ -9,7 +9,6 @@ function login(req, res) {
   const { username, password } = req.body;
   logger.debug(`Login attempt: ${username}`);
 
-  // authService.authenticate retourneert een Promise
   authService.authenticate(username, password)
     .then(staff => {
       if (!staff) {
@@ -26,7 +25,7 @@ function login(req, res) {
       };
 
       logger.debug(`Staff ${staff.username} logged in`);
-      res.redirect("/"); // of een andere pagina
+      res.redirect("/");
     })
     .catch(err => {
       logger.error("Login error: " + err.message);
