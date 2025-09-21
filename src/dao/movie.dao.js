@@ -32,6 +32,10 @@ function createMovie(movie, callback) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
+  const specialFeatures = Array.isArray(movie.special_features)
+    ? movie.special_features.join(',')
+    : movie.special_features || '';
+
   const params = [
     movie.title,
     movie.description,
@@ -42,7 +46,7 @@ function createMovie(movie, callback) {
     movie.length,
     movie.replacement_cost,
     movie.rating,
-    movie.special_features
+    specialFeatures  
   ];
 
   logger.debug(`DAO: createMovie sql=${sql}`);
@@ -105,14 +109,93 @@ function updateMovie(id, movie, callback) {
 
 // film verwijderen
 function deleteMovie(id, callback) {
-  db.query('DELETE FROM film WHERE film_id = ?', [id], function (err, result) {
+  const selectInventorySql = 'SELECT inventory_id FROM inventory WHERE film_id = ?';
+
+  db.query(selectInventorySql, [id], function (err, results) {
     if (err) {
-      logger.error(`DAO deleteMovie error: ${err.message}`);
+      logger.error(`DAO error selecting inventory: ${err.message}`);
       return callback(err);
     }
-    callback(null, result.affectedRows > 0);
+
+    const inventoryIds = results.map(row => row.inventory_id);
+
+    // Stap 1: Verwijder alle rentals die verwijzen naar deze inventory_id's
+    function deleteRentals(next) {
+      if (inventoryIds.length === 0) return next();
+
+      const deleteRentalsSql = 'DELETE FROM rental WHERE inventory_id IN (?)';
+      db.query(deleteRentalsSql, [inventoryIds], function (err) {
+        if (err) {
+          logger.error(`DAO error deleting rentals: ${err.message}`);
+          return callback(err);
+        }
+        next();
+      });
+    }
+
+    // Stap 2: Verwijder uit inventory
+    function deleteInventory(next) {
+      const sql = 'DELETE FROM inventory WHERE film_id = ?';
+      db.query(sql, [id], function (err) {
+        if (err) {
+          logger.error(`DAO error deleting inventory: ${err.message}`);
+          return callback(err);
+        }
+        next();
+      });
+    }
+
+    // Stap 3: Verwijder uit film_actor
+    function deleteFilmActor(next) {
+      const sql = 'DELETE FROM film_actor WHERE film_id = ?';
+      db.query(sql, [id], function (err) {
+        if (err) {
+          logger.error(`DAO error deleting film_actor: ${err.message}`);
+          return callback(err);
+        }
+        next();
+      });
+    }
+
+    // Stap 4: Verwijder uit film_category
+    function deleteFilmCategory(next) {
+      const sql = 'DELETE FROM film_category WHERE film_id = ?';
+      db.query(sql, [id], function (err) {
+        if (err) {
+          logger.error(`DAO error deleting film_category: ${err.message}`);
+          return callback(err);
+        }
+        next();
+      });
+    }
+
+    // Stap 5: Verwijder de film zelf
+    function deleteFilm() {
+      const sql = 'DELETE FROM film WHERE film_id = ?';
+      db.query(sql, [id], function (err, result) {
+        if (err) {
+          logger.error(`DAO error deleting film: ${err.message}`);
+          return callback(err);
+        }
+        callback(null, result.affectedRows > 0);
+      });
+    }
+
+    // Start het verwijderproces
+    deleteRentals(() => {
+      deleteInventory(() => {
+        deleteFilmActor(() => {
+          deleteFilmCategory(() => {
+            deleteFilm();
+          });
+        });
+      });
+    });
   });
 }
+
+
+
 
 module.exports = {
   getAllMovies,
