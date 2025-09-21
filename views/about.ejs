@@ -1,48 +1,103 @@
-
-  <!-- Epic 1 -->
-  <div class="row mb-3">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title">Epic 1: Filmoverzicht en details</h3>
-          <ol class="mt-2 mb-0">
-            <li>Als ingelogde gebruiker wil ik een lijst van alle films zien, zodat ik weet welke films er zijn.</li>
-            <li>Als gebruiker wil ik op een film kunnen klikken om meer details te zien, zodat ik weet wat de film inhoudt.</li>
-            <li>Als gebruiker wil ik een film kunnen verwijderen vanuit de detailpagina, zodat ik oude of onnodige films kan opruimen.</li>
-          </ol>
-        </div>
+<!-- Epic 1 -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title">Epic 1: Filmoverzicht en details</h3>
+        <ol class="mt-2 mb-0">
+          <li>
+            Als ingelogde gebruiker wil ik een lijst van alle films zien, zodat ik weet welke films er zijn.
+            <ul>
+              <li>De gebruiker moet ingelogd zijn om de lijst te bekijken.</li>
+              <li>De lijst toont ten minste titel en releasejaar per film.</li>
+              <li>Bij geen films verschijnt de melding "Nog geen films toegevoegd".</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik op een film kunnen klikken om meer details te zien, zodat ik weet wat de film inhoudt.
+            <ul>
+              <li>De detailpagina toont titel, beschrijving, genre en releasejaar.</li>
+              <li>De gebruiker kan via een knop terug naar het overzicht.</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik een film kunnen verwijderen vanuit de detailpagina, zodat ik oude of onnodige films kan opruimen.
+            <ul>
+              <li>Op de detailpagina staat een "Verwijderen"-knop.</li>
+              <li>Na verwijderen wordt de gebruiker teruggestuurd naar het overzicht.</li>
+              <li>De film is niet langer zichtbaar in het overzicht.</li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Epic 2 -->
-  <div class="row mb-3">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title">Epic 2: Authenticatie en toegang</h3>
-          <ol class="mt-2 mb-0">
-            <li>Als gebruiker wil ik kunnen inloggen met een gebruikersnaam en wachtwoord, zodat ik toegang krijg tot de website.</li>
-            <li>Als gebruiker wil ik een foutmelding zien bij foutieve inloggegevens, zodat ik weet dat ik iets verkeerd heb ingevuld.</li>
-            <li>Als gebruiker wil ik automatisch doorgestuurd worden naar het filmoverzicht na succesvol inloggen, zodat ik direct toegang heb tot de content.</li>
-          </ol>
-        </div>
+<!-- Epic 2 -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title">Epic 2: Authenticatie en toegang</h3>
+        <ol class="mt-2 mb-0">
+          <li>
+            Als gebruiker wil ik kunnen inloggen met een gebruikersnaam en wachtwoord, zodat ik toegang krijg tot de website.
+            <ul>
+              <li>Het loginformulier bevat velden voor gebruikersnaam en wachtwoord.</li>
+              <li>Bij correcte gegevens wordt de gebruiker ingelogd.</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik een foutmelding zien bij foutieve inloggegevens, zodat ik weet dat ik iets verkeerd heb ingevuld.
+            <ul>
+              <li>Bij onjuiste inloggegevens verschijnt een foutmelding.</li>
+              <li>De gebruiker blijft op de loginpagina en kan opnieuw proberen.</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik automatisch doorgestuurd worden naar het filmoverzicht na succesvol inloggen, zodat ik direct toegang heb tot de content.
+            <ul>
+              <li>Na succesvol inloggen wordt de gebruiker doorgestuurd naar de pagina <code>/movies</code>.</li>
+              <li>De gebruiker blijft ingelogd tijdens de sessie.</li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Epic 3 -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title">Epic 3: Filmbeheer</h3>
-          <ol class="mt-2 mb-0">
-            <li>Als gebruiker wil ik op een knop kunnen klikken om een formulier voor een nieuwe film te openen, zodat ik eenvoudig nieuwe films kan toevoegen.</li>
-            <li>Als gebruiker wil ik een bestaand filmformulier kunnen invullen en opslaan, zodat ik nieuwe films kan aanmaken.</li>
-            <li>Als gebruiker wil ik een bestaande film kunnen bewerken via het formulier, zodat ik informatie van films kan bijwerken indien nodig.</li>
-          </ol>
-        </div>
+<!-- Epic 3 -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title">Epic 3: Filmbeheer</h3>
+        <ol class="mt-2 mb-0">
+          <li>
+            Als gebruiker wil ik op een knop kunnen klikken om een formulier voor een nieuwe film te openen, zodat ik eenvoudig nieuwe films kan toevoegen.
+            <ul>
+              <li>De knop "Nieuwe film" opent een leeg formulier.</li>
+              <li>Het formulier bevat minimaal velden voor titel, beschrijving, genre en releasejaar.</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik een bestaand filmformulier kunnen invullen en opslaan, zodat ik nieuwe films kan aanmaken.
+            <ul>
+              <li>Na opslaan verschijnt de nieuwe film in het overzicht.</li>
+              <li>De gebruiker krijgt een bevestigingsmelding dat de film is toegevoegd.</li>
+            </ul>
+          </li>
+          <li>
+            Als gebruiker wil ik een bestaande film kunnen bewerken via het formulier, zodat ik informatie van films kan bijwerken indien nodig.
+            <ul>
+              <li>Het bewerkingsformulier toont de huidige informatie van de film vooraf ingevuld.</li>
+              <li>Na opslaan wordt de film bijgewerkt in het overzicht en detailpagina.</li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </div>
   </div>
+</div>
